@@ -1,4 +1,6 @@
 import React from 'react';
+import 'react-bulma-components/dist/react-bulma-components.min.css';
+import { Tile, Button } from 'react-bulma-components';
 
 function getSentencePair() {
     // TODO: Call Python for generation of one sentence pair (or JS?)
@@ -48,9 +50,11 @@ export class TestSentence extends React.Component {
     render() {
       return (
         <div className="test-sentence">
-          <p>Sentence: {this.state.japanese_sentence}</p>
-          <p>Answer: </p> <input type="text" value={this.state.user_translation} onChange={this.handleChange}/> 
-          <button type="button" onClick={() => this.validate_translation()}>Validate</button>
+          <Tile renderAs="article" kind="child" notification color="primary">
+            <p>Sentence: {this.state.japanese_sentence}</p>
+            <p>Answer: </p> <input  type="text" value={this.state.user_translation} onChange={this.handleChange}/> 
+            <Button type="button" onClick={() => this.validate_translation()}>Validate</Button>
+          </Tile>
         </div>
       );
     }

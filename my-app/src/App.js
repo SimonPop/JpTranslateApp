@@ -1,5 +1,7 @@
 import React from 'react';
 import TestSentence from './TestSentence' ;
+import 'react-bulma-components/dist/react-bulma-components.min.css';
+import { Columns, Section, Box, Tile, Container } from 'react-bulma-components';
 
 export class App extends React.Component {
   constructor(props) {
@@ -43,10 +45,20 @@ export class App extends React.Component {
 
     return (
       <div className="app">
-        <TestSentence 
-        validate={(japanese_sentence, english_sentence, user_translation) => this.add_to_history(japanese_sentence, english_sentence, user_translation)}/>
-        <Score score={averageScore || 0} />
-        <ol>{sentences}</ol>
+        <Section>
+          <Box>
+            <Columns>
+              <Columns.Column size={9}>
+                <TestSentence 
+                validate={(japanese_sentence, english_sentence, user_translation) => this.add_to_history(japanese_sentence, english_sentence, user_translation)}/>
+              </Columns.Column>
+              <Columns.Column size={3}>
+                <Score score={averageScore || 0} />
+              </Columns.Column>
+            </Columns>
+            <ul>{sentences}</ul>
+          </Box>
+        </Section>
       </div>
     );
   }
@@ -54,20 +66,24 @@ export class App extends React.Component {
 
 function HistorySentence(props) {
   return (
-    <div>
-      <p>{props.japanese_sentence}</p>
-      <p>{props.english_sentence}</p>
-      <p>{props.user_translation}</p>
-      <p>{Math.round(props.note*100)/100}</p>
-    </div>
+    <Tile renderAs="article" kind="child" notification color="danger">
+      <Container>
+        <p>{props.japanese_sentence}</p>
+        <p>{props.english_sentence}</p>
+        <p>{props.user_translation}</p>
+        <p>{Math.round(props.note*100)/100}</p>
+      </Container>
+    </Tile>
   );
 }
 
 function Score(props) {
   return (
-    <div>
-      <p>Score: {Math.round(props.score*100)/100}</p>
-    </div>
+    <Tile renderAs="article" kind="child" notification color="warning">
+      <Container>
+        <p>Score: {Math.round(props.score*100)/100}</p>
+      </Container>
+    </Tile>
   );
 }
 
