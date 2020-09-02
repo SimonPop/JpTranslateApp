@@ -13,14 +13,17 @@ export class App extends React.Component {
 
   add_to_history(japanese_sentence, english_sentence, user_translation) {
     const history = this.state.history.slice();
-    this.setState({
-      history: history.concat([{
-        japanese_sentence: japanese_sentence,
-        english_sentence: english_sentence,
-        user_translation: user_translation,
-        note: noteTranslation(english_sentence, user_translation)
-      }])
-    });
+    noteTranslation(english_sentence, user_translation).then((note) => 
+      this.setState({
+        history: history.concat([{
+          japanese_sentence: japanese_sentence,
+          english_sentence: english_sentence,
+          user_translation: user_translation,
+          note: note
+        }])
+      })
+    )
+    ;
   }
 
   render() {
@@ -88,8 +91,15 @@ function Score(props) {
 }
 
 function noteTranslation(target, user_translation) {
-  // TODO: call Python to evaluate quality of translation.
-  return 1 - Math.abs(target.length - user_translation.length) / Math.max(target.length, user_translation.length);
+  return fetch(`http://localhost:8080/note/${user_translation}/${target}`)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        return result.note;
+      }
+    );
+  
+  // return 1 - Math.abs(target.length - user_translation.length) / Math.max(target.length, user_translation.length);
 }
 
 export default App;

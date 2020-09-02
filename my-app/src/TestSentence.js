@@ -3,34 +3,38 @@ import 'react-bulma-components/dist/react-bulma-components.min.css';
 import { Tile, Button } from 'react-bulma-components';
 
 function getSentencePair() {
-    // TODO: Call Python for generation of one sentence pair (or JS?)
-    return {
-      japanese_sentence: '反応テスト', 
-      english_sentence: 'React test.'
-    }; 
+    return fetch("http://localhost:8080/random/")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        return {japanese_sentence: result.japanese1, english_sentence: result.english};
+      }
+    );
   }
 
 export class TestSentence extends React.Component {
     constructor(props) {
       super(props);
-
-    // Get an initial pair of sentences to translate.
-    const {japanese_sentence, english_sentence } = getSentencePair();
-
       this.state = {
-        japanese_sentence: japanese_sentence,
-        english_sentence: english_sentence,
+        japanese_sentence: '',
+        english_sentence: '',
         user_translation: '',
       };
     }
   
     reinitSentence() {
-        const {japanese_sentence, english_sentence} = getSentencePair();
+      getSentencePair()
+        .then(({japanese_sentence, english_sentence }) => 
         this.setState({
             japanese_sentence: japanese_sentence,
             english_sentence: english_sentence,
             user_translation: '',
-          });
+          })
+        );
+    }
+
+    componentDidMount() {
+      this.reinitSentence();
     }
 
     handleChange = (e) =>{ 
