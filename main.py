@@ -51,7 +51,5 @@ def note_synonymity(user_sentence, target_sentence):
 
     return jsonable_encoder({"note": paraphrase_results[1]})
 
-
-
 if __name__ == '__main__':
     uvicorn.run(app, port=8080, host='0.0.0.0')

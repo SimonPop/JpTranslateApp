@@ -1,7 +1,7 @@
 import React from 'react';
 import TestSentence from './TestSentence' ;
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Columns, Section, Box, Tile, Container } from 'react-bulma-components';
+import { Columns, Hero, Tile, Container } from 'react-bulma-components';
 
 export class App extends React.Component {
   constructor(props) {
@@ -15,12 +15,12 @@ export class App extends React.Component {
     const history = this.state.history.slice();
     noteTranslation(english_sentence, user_translation).then((note) => 
       this.setState({
-        history: history.concat([{
+        history: [{
           japanese_sentence: japanese_sentence,
           english_sentence: english_sentence,
           user_translation: user_translation,
           note: note
-        }])
+        }].concat(history)
       })
     )
     ;
@@ -28,6 +28,7 @@ export class App extends React.Component {
 
   render() {
     const history = this.state.history;
+    console.log(history)
     const sentences = history.map((sentence, index) => {
       return (
         <li key={index}>
@@ -47,29 +48,37 @@ export class App extends React.Component {
   }, 0) / history.length;
 
     return (
-      <div className="app">
-        <Section>
-          <Box>
-            <Columns>
-              <Columns.Column size={9}>
-                <TestSentence 
+  <div className="app" class="has-text-centered">
+    <Hero color="primary">
+        <Hero.Body>
+            <Container>
+                <Columns>
+                    <Columns.Column size={9}>
+                        <TestSentence 
                 validate={(japanese_sentence, english_sentence, user_translation) => this.add_to_history(japanese_sentence, english_sentence, user_translation)}/>
-              </Columns.Column>
-              <Columns.Column size={3}>
-                <Score score={averageScore || 0} />
-              </Columns.Column>
-            </Columns>
-            <ul>{sentences}</ul>
-          </Box>
-        </Section>
-      </div>
+                    </Columns.Column>
+                    <Columns.Column size={3}>
+                        <Score score={averageScore || 0} />
+                    </Columns.Column>
+                </Columns>
+            </Container>
+        </Hero.Body>
+    </Hero>
+    <Hero>
+        <Hero.Body>
+            <Container>
+                <ul>{sentences}</ul>
+            </Container>
+        </Hero.Body>
+    </Hero>
+</div>
     );
   }
 }
 
 function HistorySentence(props) {
   return (
-    <Tile renderAs="article" kind="child" notification color="danger">
+    <Tile renderAs="article" kind="child" class="box">
       <Container>
         <p>{props.japanese_sentence}</p>
         <p>{props.english_sentence}</p>
@@ -82,7 +91,7 @@ function HistorySentence(props) {
 
 function Score(props) {
   return (
-    <Tile renderAs="article" kind="child" notification color="warning">
+    <Tile renderAs="article" kind="child" class="box">
       <Container>
         <p>Score: {Math.round(props.score*100)/100}</p>
       </Container>

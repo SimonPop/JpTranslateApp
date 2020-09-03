@@ -1,6 +1,10 @@
 import React from 'react';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import { Tile, Button } from 'react-bulma-components';
+import { Level, Button, Columns } from 'react-bulma-components';
+
+import { Form } from 'react-bulma-components';
+
+const { Input, Field, Control, Label } = Form;
 
 function getSentencePair() {
     return fetch("http://localhost:8080/random/")
@@ -42,6 +46,12 @@ export class TestSentence extends React.Component {
           user_translation: e.target.value
         });
     }
+
+    handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        this.validate_translation();
+      }
+    }
   
     validate_translation() {
       this.props.validate(
@@ -53,12 +63,23 @@ export class TestSentence extends React.Component {
   
     render() {
       return (
-        <div className="test-sentence">
-          <Tile renderAs="article" kind="child" notification color="primary">
-            <p>Sentence: {this.state.japanese_sentence}</p>
-            <p>Answer: </p> <input  type="text" value={this.state.user_translation} onChange={this.handleChange}/> 
-            <Button type="button" onClick={() => this.validate_translation()}>Validate</Button>
-          </Tile>
+        <div className="test-sentence" class="has-text-centered">
+          <Level>
+              <Level.Item>
+                <p>{this.state.japanese_sentence}</p>
+              </Level.Item>
+          </Level>
+            <Columns>
+              <Columns.Column size={2}>
+                <p>Type your answer: </p>
+              </Columns.Column>
+              <Columns.Column size={8}>
+                <Input  type="text" value={this.state.user_translation} onChange={this.handleChange} onKeyDown={this.handleKeyDown}/>
+              </Columns.Column>
+              <Columns.Column size={2}>
+                <Button type="button" onClick={() => this.validate_translation()}>Validate</Button>
+              </Columns.Column>
+            </Columns>
         </div>
       );
     }
